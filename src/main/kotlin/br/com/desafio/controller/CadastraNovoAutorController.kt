@@ -1,5 +1,6 @@
 package br.com.desafio.controller
 
+import br.com.desafio.exception.CadastroException
 import br.com.desafio.modelo.Autor
 import br.com.desafio.repository.AutorRepository
 import org.springframework.http.ResponseEntity
@@ -18,9 +19,16 @@ class CadastraNovoAutorController(val autorRepository: AutorRepository) {
 
     @PostMapping
     fun cadastra(@RequestBody @Valid novoAutor: NovoAutorRequest): ResponseEntity<Any> {
-        val autor: Autor = novoAutor.toModel()
-        autorRepository.save(autor)
-        return ResponseEntity.ok().build()
+        val existecadastro = autorRepository.findByEmail(novoAutor.email)
+        if (existecadastro.isEmpty) {
+            val autor: Autor = novoAutor.toModel()
+            autorRepository.save(autor)
+            val response = NovoAutorResponse(autor.id!!,autor.nome)
+            return ResponseEntity.ok(response)
+        }
+        throw CadastroException(
+            mensagem = "Usuário ${novoAutor.email} já está cadastrado"
+        )
     }
 
     data class NovoAutorRequest(
@@ -34,5 +42,10 @@ class CadastraNovoAutorController(val autorRepository: AutorRepository) {
             descricao = descricao
         )
     }
+
+    data class NovoAutorResponse(
+        val id: Long,
+        val nome: String,
+    )
 
 }
