@@ -6,4 +6,5 @@ import java.util.*
 
 interface LivroRepository: JpaRepository<Livro, Long> {
     abstract fun findByTitulo(titulo: String) : Optional<Livro>
+//    abstract override fun findById(id: Long): Optional<Livro>
 }
