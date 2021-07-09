@@ -16,28 +16,21 @@ import javax.validation.constraints.NotBlank
 class CadastraNovaCategoriaController(val categoriaRepository: CategoriaRepository) {
 
     @PostMapping
-    fun cadastra(@RequestBody @Valid novaCategoria: NovaCategoriaRequest):ResponseEntity<Any> {
+    fun cadastra(@RequestBody @Valid novaCategoria: NovaCategoriaRequest): ResponseEntity<Any> {
         val existeCategoria = categoriaRepository.findByCategoria(novaCategoria.categoria)
         if (existeCategoria.isEmpty) {
-            val categoria: Categoria = novaCategoria.toModel()
+            val categoria = novaCategoria.toModel()
             categoriaRepository.save(categoria)
-            val response = NovaCategoriaResponse(categoria.id!!, categoria.categoria)
-            return ResponseEntity.ok(response)
+            return ResponseEntity.ok().build()
         }
         throw CadastroException(mensagem = "A categoria ${novaCategoria.categoria} já foi cadastrada")
     }
 
     data class NovaCategoriaRequest(
         @field:NotBlank val categoria: String
-    ){
+    ) {
         fun toModel() = Categoria(
             categoria = categoria
         )
     }
-
-    data class NovaCategoriaResponse(
-        val id: Long,
-        val categoria: String
-    )
-
 }
