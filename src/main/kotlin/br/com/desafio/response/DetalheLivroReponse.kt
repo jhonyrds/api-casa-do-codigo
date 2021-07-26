@@ -2,7 +2,7 @@ package br.com.desafio.response
 
 import br.com.desafio.modelo.Livro
 
-class DetalheLivroReponse(livro: Livro) {
+data class DetalheLivroReponse(val livro: Livro) {
     val titulo = livro.titulo
     val resumo = livro.resumo
     val sumario = livro.sumario
