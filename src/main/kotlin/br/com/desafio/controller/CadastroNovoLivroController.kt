@@ -28,13 +28,6 @@ class CadastroNovoLivroController(
         }
         throw CadastroException("O titulo ${novoLivro.titulo} já foi cadastrado")
     }
-
-    @GetMapping
-    fun listaLivros(): ResponseEntity<List<ListaLivrosResponse>> {
-        val livros: List<Livro> = livroRepository.findAll()
-        val resposta = livros.map { livro -> ListaLivrosResponse(livro) }
-        return ResponseEntity.ok(resposta)
-    }
 }
 
 
